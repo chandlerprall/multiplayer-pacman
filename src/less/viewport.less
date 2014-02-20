@@ -1,0 +1,90 @@
+// Colors
+
+@lightblack: #333333;
+@white: #FFFFFF;
+
+// Elements
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, 
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+h1,h2,h3,h4,h5 {
+  margin-top: 0;
+}
+
+button {
+  border: none;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 8px 20px;
+  -webkit-transition: background-color 0.3s ease;
+  -moz-transition: background-color 0.3s ease;
+  -ms-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+  &.start {
+    background-color: @lightblack;
+    color: @white;
+    &:hover {
+      background-color: darken(@lightblack, 5%);
+    }
+  }
+}
+
+// Game Globals
+
+#game-canvas {
+  width: 100%;
+}
+
+// Layout Helpers
+
+.centered-text {
+  text-align: center;
+}
+.centered-block {
+  display: block;
+  margin: 0 auto;
+}
+.centered-inline-block {
+  display: inline-block;
+  margin: 0 auto;
+}
+.centered-parent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate( -50%, -50% );
+  -moz-transform: translate( -50%, -50% );
+  transform: translate( -50%, -50% );
+}
+
+// Responsive Tidbits
+
+@media screen and (min-width: 900px) {
+  body {
+
+  }
+}

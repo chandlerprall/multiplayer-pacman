@@ -1,0 +1,22 @@
+{
+  "name": "Pacman",
+  "version": "0.0.1",
+  "description": "Multiplayer Pacman Game",
+  "main": "build/pacman.js",
+  "directories": {
+    "lib": "src"
+  },
+  "repository": "",
+  "author": {
+      "name": "Chandler Prall",
+      "email": "chandler.prall@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-concat": "0.1.x",
+    "grunt-contrib-jshint": "0.3.x",
+    "grunt-contrib-uglify": "0.2.x",
+    "grunt-contrib-less":   "0.6.x"
+  }
+}

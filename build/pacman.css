@@ -1,0 +1,33 @@
+
+
+#screen-game #editor{position:fixed;top:0;right:0;width:200px;background-color:#eee}#screen-game #editor h1{background-color:#ccc;font-size:14px;cursor:pointer;text-align:center;padding:3px 5px}
+#screen-game #editor #editor-panel button{background-color:#333;color:#fff}
+#screen-game #editor #editor-panel.hidden{display:none}
+
+#screen-loading{background-color:#ddd}#screen-loading h2{color:#333}
+
+#screen-main{background-color:#ddd}
+
+.screen{position:relative;height:100%}
+
+#tapeplayer{position:fixed;color:#000;bottom:0;left:0;clear:both;width:100%;border-top:1px solid #333;background-color:rgba(0,0,0,0.2)}
+#timeline{height:50px;background-color:rgba(0,0,0,0.2);color:transparent;border-bottom:1px solid rgba(0,0,0,0.2)}
+.controls{width:90%;height:100%;margin:0 auto;text-align:center;background-color:rgba(0,0,0,0.5)}
+.tapebutton{float:left;width:18%;height:100%;margin:0 1%;border-right:1px solid rgba(0,0,0,0.4);border-left:1px solid rgba(0,0,0,0.4)}.tapebutton span{padding:20px;position:relative;display:block;background-color:rgba(0,0,0,0.2);-webkit-transition:background-color .3s ease;-moz-transition:background-color .3s ease;-ms-transition:background-color .3s ease;-o-transition:background-color .3s ease;transition:background-color .3s ease}.tapebutton span:hover{background-color:rgba(0,0,0,0.3)}
+.tapebutton span:active{background-color:rgba(0,0,0,0.4)}
+.tapebutton span:before,.tapebutton span:after{content:'';position:absolute}
+.record span:after{margin-left:8px;margin-top:2px;height:15px;width:15px;border-radius:10px;background-color:#d12121}
+.play span:after{margin-left:8px;margin-top:2px;border-top:15px solid transparent;border-right:15px solid #21d144;-webkit-transform:rotateZ(-45deg);-moz-transform:rotateZ(-45deg);-ms-transform:rotateZ(-45deg);-o-transform:rotateZ(-45deg);transform:rotateZ(-45deg)}
+.stop span:after{margin-left:8px;margin-top:2px;height:15px;width:15px;background-color:#000}
+
+*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;font-family:sans-serif}
+a{text-decoration:none;color:inherit}a:hover{text-decoration:none}
+h1,h2,h3,h4,h5{margin-top:0}
+button{border:none;background:none;box-shadow:none;border-radius:0;cursor:pointer;padding:8px 20px;-webkit-transition:background-color .3s ease;-moz-transition:background-color .3s ease;-ms-transition:background-color .3s ease;-o-transition:background-color .3s ease;transition:background-color .3s ease}button.start{background-color:#333;color:#fff}button.start:hover{background-color:#262626}
+#game-canvas{width:100%}
+.centered-text{text-align:center}
+.centered-block{display:block;margin:0 auto}
+.centered-inline-block{display:inline-block;margin:0 auto}
+.centered-parent{position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%, -50%);-moz-transform:translate(-50%, -50%);transform:translate(-50%, -50%)}
+@media screen and (min-width:900px){}
