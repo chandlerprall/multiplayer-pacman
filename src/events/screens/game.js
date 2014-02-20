@@ -9,6 +9,7 @@
 		player,
 
 		lastRenderTime,
+		currentKey,
 
 		createCanvas = function()
 		{
@@ -38,41 +39,52 @@
 
 		onKeyDown = function( e )
 		{
+			currentKey = e.keyCode;
+		},
+
+		onKeyUp = function()
+		{
+			currentKey = undefined;
+		},
+
+		processKey = function()
+		{
 			var accuracy = 0.1;
 
 			if ( player.x % 1 > accuracy && player.x % 1 < 1 - accuracy )
 			{
-				if ( player.y % 1 > accuracy && player.y % 1 < 1 - accuracy )
-				{
-					return;
-				}
+				return;
+			}
+			if ( player.y % 1 > accuracy && player.y % 1 < 1 - accuracy )
+			{
+				return;
 			}
 
-			switch ( e.keyCode )
+			switch ( currentKey )
 			{
 				// Left
 				case 37:
-					if ( map.nextToWall( player.x, Math.round( player.y ), 'left' ) ) return;
+					if ( map.nextToWall( player.x, Math.round( player.y ), 'left' ) ) { return; }
 					player.direction = 'left';
 					player.y = Math.round( player.y );
 					break;
 
 				// Up
 				case 38:
-					if ( map.nextToWall( Math.round( player.x ), player.y, 'up' ) ) return;
+					if ( map.nextToWall( Math.round( player.x ), player.y, 'up' ) ) { return; }
 					player.direction = 'up';
 					player.x = Math.round( player.x );
 					break;
 
 				// Right
 				case 39:
-					if ( map.nextToWall( player.x, Math.round( player.y ), 'right' ) ) return;
+					if ( map.nextToWall( player.x, Math.round( player.y ), 'right' ) ) { return; }
 					player.direction = 'right';
 					player.y = Math.round( player.y );
 					break;
 
 				case 40:
-					if ( map.nextToWall( Math.round( player.x ), player.y, 'down' ) ) return;
+					if ( map.nextToWall( Math.round( player.x ), player.y, 'down' ) ) { return; }
 					player.direction = 'down';
 					player.x = Math.round( player.x );
 					break;
@@ -90,6 +102,7 @@
 				createPlayer();
 
 				document.body.addEventListener( 'keydown', onKeyDown );
+				document.body.addEventListener( 'keyup', onKeyUp );
 			},
 
 			destroy: function()
@@ -98,6 +111,7 @@
 				canvas = ctx = null;
 
 				document.body.removeEventListener( 'keydown', onKeyDown );
+				document.body.removeEventListener( 'keyup', onKeyUp );
 			},
 
 			start: function()
@@ -141,6 +155,8 @@
 						}
 					}
 				}
+
+				processKey();
 
 				// Move & render player
 				if ( player.direction === 'down' )
