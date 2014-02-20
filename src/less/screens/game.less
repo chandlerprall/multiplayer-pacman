@@ -1,52 +1,8 @@
-@import "../colors.less";
-
 #screen-game {
-    #editor {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 200px;
-        background-color: #eee;
-
-        h1 {
-            background-color: #ccc;
-            font-size: 14px;
-            cursor: pointer;
-            text-align: center;
-            padding: 3px 5px;
-        }
-
-        #editor-panel {
-            button {
-                background-color: @lightblack;
-                color: @white;
-            }
-
-            &.hidden {
-                display: none;
-            }
-        }
+    canvas {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
     }
-
-    // #tapeplayer {
-    //   position: fixed;
-    //   bottom: 0;
-    //   left: 0;
-    //   right: 0;
-    //   height: 150px;
-    //   width: 960px;
-    //   background-color: white;
-    //   border-top: 1px solid #000;
-    //     #timeline {
-    //       height:20px;
-    //       background: #000;
-    //     }
-    //     #tapebutton_container {
-    //       .tapebutton {
-    //         float:left;
-    //         width:60px;
-    //         height:130px;
-    //       }
-    //     }
-    // }
 }

@@ -3,7 +3,9 @@
  * @param name
  * @constructor
  */
-var Screen = function( name ) {
+var Screen = function( name, definition ) {
+	definition = definition || {};
+
 	var slugged_name = Utils.slugify( name );
 
 	this.name = name;
@@ -13,6 +15,14 @@ var Screen = function( name ) {
 
 	this.template = new Template( 'screens/' + slugged_name );
 	this.template.render( {}, this.update.bind( this ) );
+
+	for ( var key in definition )
+	{
+		if ( definition.hasOwnProperty( key ) )
+		{
+			this[key] = definition[key];
+		}
+	}
 };
 
 /**
@@ -45,7 +55,6 @@ Screen.prototype.hide = function() {
  * Creates a new Screen and adds it to `Game.screens`
  * @param name
  */
-Screen.create = function( name ) {
-	var screen = new Screen( name );
-	Game.screens[name] = screen;
+Screen.create = function( name, definition ) {
+	return Game.screens[name] = new Screen( name, definition );
 };

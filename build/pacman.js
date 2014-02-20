@@ -1,8 +1,57 @@
+// requestAnimationFrame polyfill from http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
+(function() {
+	var lastTime = 0;
+	var vendors = ['webkit', 'moz'];
+	for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+		window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+		window.cancelAnimationFrame =
+			window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+	}
+
+	if (!window.requestAnimationFrame)
+		window.requestAnimationFrame = function(callback, element) {
+			var currTime = new Date().getTime();
+			var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+			var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+				timeToCall);
+			lastTime = currTime + timeToCall;
+			return id;
+		};
+
+	if (!window.cancelAnimationFrame)
+		window.cancelAnimationFrame = function(id) {
+			clearTimeout(id);
+		};
+}());
+
 (function(){
 	var Game = {
 		screens: {} // Map of loaded screens
 
 	};
+var Actor = function( hitboxSize, speed )
+{
+	this.x = 0;
+	this.y = 0;
+	this.hitboxSize = hitboxSize;
+	this.speed = speed;
+	this.direction = 'down';
+};
+Actor.prototype = {
+	render: function( ctx, x, y )
+	{
+		ctx.fillStyle = '#ffff00';
+		ctx.beginPath();
+		ctx.arc(
+			x,
+			y,
+			24,
+			0,
+			Math.PI * 2
+		);
+		ctx.fill();
+	}
+};
 var Audio = (function(){
 	var audio_context = window.AudioContext ? new AudioContext() : new webkitAudioContext(),
 		_id = 0;
@@ -201,12 +250,66 @@ var Events = (function(){
 		}
 	};
 })();
+var Map = function()
+{
+	this.width = 20;
+	this.height = 20;
+
+	this.tiles = [
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+	];
+};
+
+Map.prototype = {
+	nextToWall: function( x, y, direction )
+	{
+		if ( direction === 'down' )
+		{
+			y += 1;
+		}
+		else if ( direction === 'up' )
+		{
+			y -= 1;
+		}
+		else if ( direction === 'right' )
+		{
+			x += 1;
+		}
+		else if ( direction === 'left' )
+		{
+			x -= 1;
+		}
+
+		return this.tiles[ x + y * this.width ] === 1;
+	}
+};
 /**
  * A game screen, automatically loads in its template
  * @param name
  * @constructor
  */
-var Screen = function( name ) {
+var Screen = function( name, definition ) {
+	definition = definition || {};
+
 	var slugged_name = Utils.slugify( name );
 
 	this.name = name;
@@ -216,6 +319,14 @@ var Screen = function( name ) {
 
 	this.template = new Template( 'screens/' + slugged_name );
 	this.template.render( {}, this.update.bind( this ) );
+
+	for ( var key in definition )
+	{
+		if ( definition.hasOwnProperty( key ) )
+		{
+			this[key] = definition[key];
+		}
+	}
 };
 
 /**
@@ -248,9 +359,8 @@ Screen.prototype.hide = function() {
  * Creates a new Screen and adds it to `Game.screens`
  * @param name
  */
-Screen.create = function( name ) {
-	var screen = new Screen( name );
-	Game.screens[name] = screen;
+Screen.create = function( name, definition ) {
+	return Game.screens[name] = new Screen( name, definition );
 };
 var Template = function( source ) {
 	this.compiled = null;
@@ -301,27 +411,215 @@ var ajax = function( type, where, callback, context, response_type ) {
 
 	request.send();
 };
-
 (function(){
-	var initRenderer = function() {
+	var canvas,
+		ctx,
+		map,
 
+		tileWidth = 48,
+		tileHeight = 48,
+
+		player,
+
+		lastRenderTime,
+
+		createCanvas = function()
+		{
+			canvas = document.createElement( 'CANVAS' );
+			screen.container.appendChild( canvas );
+
+			canvas.width = map.width * tileWidth;
+			canvas.height = map.height * tileHeight;
+
+			ctx = canvas.getContext( '2d' );
+		},
+
+		createPlayer = function()
+		{
+			player = new Actor(
+				28, // hitbox
+				3 // speed
+			);
+			player.x = 1;
+			player.y = 1;
+		},
+
+		loadMap = function()
+		{
+			map = new Map();
+		},
+
+		onKeyDown = function( e )
+		{
+			var accuracy = 0.1;
+
+			if ( player.x % 1 > accuracy && player.x % 1 < 1 - accuracy )
+			{
+				if ( player.y % 1 > accuracy && player.y % 1 < 1 - accuracy )
+				{
+					return;
+				}
+			}
+
+			switch ( e.keyCode )
+			{
+				// Left
+				case 37:
+					if ( map.nextToWall( player.x, Math.round( player.y ), 'left' ) ) return;
+					player.direction = 'left';
+					player.y = Math.round( player.y );
+					break;
+
+				// Up
+				case 38:
+					if ( map.nextToWall( Math.round( player.x ), player.y, 'up' ) ) return;
+					player.direction = 'up';
+					player.x = Math.round( player.x );
+					break;
+
+				// Right
+				case 39:
+					if ( map.nextToWall( player.x, Math.round( player.y ), 'right' ) ) return;
+					player.direction = 'right';
+					player.y = Math.round( player.y );
+					break;
+
+				case 40:
+					if ( map.nextToWall( Math.round( player.x ), player.y, 'down' ) ) return;
+					player.direction = 'down';
+					player.x = Math.round( player.x );
+					break;
+			}
 		};
 
+	// Create the game screen object
+	var screen = Screen.create(
+		'game',
+		{
+			init: function()
+			{
+				loadMap();
+				createCanvas();
+				createPlayer();
+
+				document.body.addEventListener( 'keydown', onKeyDown );
+			},
+
+			destroy: function()
+			{
+				this.container.removeChild( canvas );
+				canvas = ctx = null;
+
+				document.body.removeEventListener( 'keydown', onKeyDown );
+			},
+
+			start: function()
+			{
+				window.requestAnimationFrame( this.render );
+			},
+
+			// Render is bound below so that `this` is _always_ `Screen.game`
+			render: function()
+			{
+				var now = window.performance.now(),
+					timeDelta = ( now - ( lastRenderTime || now ) ) / 1000;
+				lastRenderTime = now;
+
+				// Clear screen
+				ctx.fillStyle = '#000';
+				ctx.fillRect( 0, 0, canvas.width, canvas.height );
+
+				// Render those map tiles!
+				for ( var i = 0; i < map.width; i++ )
+				{
+					for ( var j = 0; j < map.height; j++ )
+					{
+						var tileIdx = i + j * map.width,
+							tile = map.tiles[ tileIdx ];
+
+						if ( tile === 0 )
+						{
+							// Empty Space
+						}
+						else if ( tile === 1 )
+						{
+							// Wall
+							ctx.fillStyle = '#666';
+							ctx.fillRect(
+								i * tileWidth,
+								j * tileHeight,
+								tileWidth,
+								tileHeight
+							);
+						}
+					}
+				}
+
+				// Move & render player
+				if ( player.direction === 'down' )
+				{
+					player.y += player.speed * timeDelta;
+
+					// Check for a wall
+					if ( map.tiles[ player.x + Math.ceil( player.y ) * map.width ] === 1 )
+					{
+						player.y = Math.floor( player.y );
+					}
+				}
+				else if ( player.direction === 'up' )
+				{
+					player.y -= player.speed * timeDelta;
+
+					// Check for a wall
+					if ( map.tiles[ player.x + Math.floor( player.y ) * map.width ] === 1 )
+					{
+						player.y = Math.ceil( player.y );
+					}
+				}
+				else if ( player.direction === 'right' )
+				{
+					player.x += player.speed * timeDelta;
+
+					// Check for a wall
+					if ( map.tiles[ Math.ceil( player.x ) + player.y * map.width ] === 1 )
+					{
+						player.x = Math.floor( player.x );
+					}
+				}
+				else if ( player.direction === 'left' )
+				{
+					player.x -= player.speed * timeDelta;
+
+					// Check for a wall
+					if ( map.tiles[ Math.floor( player.x ) + player.y * map.width ] === 1 )
+					{
+						player.x = Math.ceil( player.x );
+					}
+				}
+				player.render( ctx, player.x * tileWidth + tileWidth * 0.5, player.y * tileHeight + tileHeight * 0.5 );
+
+				window.requestAnimationFrame( this.render );
+			}
+		}
+	);
+
+	screen.render = screen.render.bind( screen );
+})();
+(function(){
 	Events.attach(
-		'startGame',
+		'startgame',
 		function() {
 			Game.screens.main.hide();
-
 			Game.screens.loading.show();
 
+			// Set timeout for now to fake having a loading time
 			setTimeout(
 				function() {
-					//initRenderer();
-					//initScenes();
-					//initCameras();
-					//bindEvents();
+					Game.screens.loading.hide();
 
-					Game.render();
+					Game.screens.game.init();
+					Game.screens.game.show();
+					Game.screens.game.start();
 				},
 				500
 			);
@@ -332,7 +630,7 @@ Game.init = (function(){
 	var loadScenes = function() {
 			Screen.create( 'loading' );
 			Screen.create( 'main' );
-			Screen.create( 'game' );
+			//Screen.create( 'game' );
 			Game.screens.main.show();
 		},
 

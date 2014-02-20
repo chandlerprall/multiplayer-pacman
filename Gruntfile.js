@@ -80,7 +80,9 @@ module.exports = function(grunt) {
 			'Template': true,
 			'Events': true,
 			'Audio': true,
-			'ajax': true
+			'ajax': true,
+			'Map': true,
+			'Actor': true
 		}
       },
 	  beforeconcat: ['src/classes/**/*.js', 'src/events/**/*.js', 'init.js']
